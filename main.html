@@ -1,0 +1,48 @@
+<table
+  class="c11n-table c11n-table--small"
+>
+  <thead>
+    <ng-template #defaultThead>
+      <tr>
+        <ng-container *ngFor="let header of initializedHeaders">
+          <th scope="col" [style.text-align]="header.textAlign" [ngClass]="[header.className]">
+            <span class="c11n-link__text">{{ header.displayName }}</span>
+          </th>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <!-- Use provided thead template if available, otherwise use the default template defined above. -->
+    <ng-container
+      [ngTemplateOutlet]="theadTemplateRef ?? defaultThead"
+      [ngTemplateOutletContext]="{ $implicit: initializedHeaders }"
+    >
+    </ng-container>
+  </thead>
+  <tbody>
+    <ng-template #defaultTbody>
+      <tr>
+        <strong>No ng-template with #tbody attribute found.</strong>
+      </tr>
+    </ng-template>
+    <ng-container *ngIf="dataSource">
+      <ng-container *ngFor="let item of dataSource.filteredData">
+        <ng-container
+          [ngTemplateOutlet]="tbodyTemplateRef ?? defaultTbody"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        >
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <tr *ngIf="!dataSource">
+        <strong>No data in datasource</strong>
+    </tr>
+  </tbody>
+  <ng-container *ngIf="tfootTemplateRef && dataSource">
+    <tfoot>
+      <ng-container
+        [ngTemplateOutlet]="tfootTemplateRef"
+        [ngTemplateOutletContext]="{ $implicit: dataSource.filteredData }"
+      ></ng-container>
+    </tfoot>
+  </ng-container>
+</table>
